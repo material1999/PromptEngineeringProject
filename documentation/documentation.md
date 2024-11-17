@@ -39,6 +39,10 @@ To address this limitation, we propose an enhanced two-stage approach:
 
 This hybrid method aims to improve alignment precision by combining the structural insights from graph embeddings with the contextual analysis power of LLMs. By integrating these techniques, the project seeks to advance the state-of-the-art in knowledge graph entity alignment and provide a robust framework for tackling real-world challenges in this domain.
 
+Source code and additional materials can be found in the following GitHub repository:
+
+[https://github.com/material1999/PromptEngineeringProject](https://github.com/material1999/PromptEngineeringProject)
+
 \vspace{1cm}
 
 ## Objectives
@@ -122,7 +126,9 @@ By building on these foundational methods, this project introduces a two-stage a
 \vspace{1cm}
 
 ## References
-- Citations for any resources, tools, or papers referenced.
+
+1. GitHub Repository with source code and additional materials:
+[link](https://github.com/material1999/PromptEngineeringProject)
 
 \vspace{1cm}
 
