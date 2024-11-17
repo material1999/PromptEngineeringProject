@@ -127,10 +127,11 @@ By building on these foundational methods, this project introduces a two-stage a
 
 ## References
 
-1. GitHub Repository with source code and additional materials:
-[link](https://github.com/material1999/PromptEngineeringProject)
+1. Citations for any resources, tools, or papers referenced.
 
 \vspace{1cm}
 
 ## Appendices
-- Additional materials, such as raw data, extended code snippets, or supplementary information.
+
+1. GitHub Repository with source code and additional materials:
+[LINK](https://github.com/material1999/PromptEngineeringProject)
