@@ -207,7 +207,21 @@ A short description of each code file from the GitHub repository:
 
 ## Results
 
-- Summary of findings or outcomes, with data visualizations or examples if applicable.
+In our evaluation, we had the following settings:
+
+- exact matches: if the label or alternative label of two nodes are the same, they can be considered a pair
+- deduplications: there can be multiple exact macthes, then we deduplicate using URL sring distance (take the node with the most similar URL)
+- top-1: take the most similar node based on cosine similarity between embeddings
+- top-10 + LLM: take the most similar node based on cosine similarity between embeddings and ask an LLM to select the pair from the provided options
+
+For each of the settings, we tried the pairing in both directions (from A to B and from B to A). To measure performance, we calculated precision, recall and F1-score for the settings.
+
+\vspace{0.25cm}
+![results_compared.png](../visualizations/results_compared.png)
+*Fig. 3   Evaluation results of all the settings*
+\vspace{0.25cm}
+
+Figure 3 shows our testing results. If we also look back at Figure 2, we can see that even with the deduplicated exact macthes (dedup_lr and dedup_rl) we can achieve better results than the top-1 most similar nodes based on cosine similarity. However, the F1-scores are still pretty low for these settings. The top-10 + LLM settings (Forward: from A to B, Backward: from B to A, Unioned: if Forward and Backward give the same result) produce way better F1-scores while keeping around the same precision and recall.
 
 \vspace{1.5cm}
 
@@ -215,19 +229,31 @@ A short description of each code file from the GitHub repository:
 
 ### Impact on Research Area
 
-Our project contributes to the field in many aspects. First of all, we couldn't find a lot of solutions in the literature for the entity alignment problem. Secondly, to our knowledge, the proposed solution is one of the first algorithms to use graph embeddings in combination with LLMs to provide a solution. We also have to highlight that with our methodology, a lot of LLM resources can be saved, since the search space of the alignment problem is quite small. This ensures that the algorithm can be applied to large networks even with millions of nodes and edges, without exceeding the context window of the LLM used.
+Our project contributes to the field in several significant ways. First and foremost, we observed a notable gap in the existing literature concerning entity alignment in knowledge graphs, particularly in approaches that integrate structural embeddings with language models. While many traditional methods focus on either purely structural similarity or purely semantic similarity, our hybrid framework combines the strengths of both, offering a more comprehensive solution to the entity alignment problem.
+
+To the best of our knowledge, our proposed method is among the first to explicitly utilize graph embeddings in conjunction with large language models (LLMs) for entity alignment. This integration allows us to leverage the representational power of graph embeddings for candidate selection while simultaneously refining these selections using the deep semantic understanding of LLMs. By combining these two approaches, we bridge a critical gap in existing methodologies, demonstrating that structural and contextual information together can significantly improve entity alignment accuracy.
+
+Furthermore, a key advantage of our methodology is its efficiency in terms of computational resources. Given that entity alignment can be a highly resource-intensive task, particularly when working with large-scale knowledge graphs, optimizing LLM usage is crucial. Our approach minimizes the number of LLM calls by first reducing the candidate search space using graph embeddings. Instead of querying the LLM for every possible entity pair in the dataset, we narrow the search down to the top-10 most similar candidates, ensuring that only the most relevant options are considered. This significantly reduces the computational cost and makes the approach scalable to large networks containing millions of nodes and edges.
 
 ### Limitations and Future Work
 
-We acknowledge that our methodology is not perfect and has some drawbacks. We could have tried multiple other promtps to find out which achieve the best performance. Cleaning the unorganized date as the initial step was also quite hard, and maybe we deleted meaningful information during the process that could later be useful for the entity alignment task.
+We acknowledge that our methodology is not perfect and has some inherent limitations. One of the main challenges was the selection and optimization of prompts for the LLM. While our chosen prompt yielded promising results, further experimentation with alternative prompt formulations could potentially enhance the model’s accuracy and decision-making capabilities. A more systematic evaluation of different prompting techniques, including few-shot learning or chain-of-thought prompting, might provide additional insights into how LLMs can be better utilized for entity alignment.
 
-Regarding future work, we could use bigger sentence embedding models or better LLMs, but this is just an initial step from us for researching the field and our budget is very limited. However, we can agree that despite all the limitations, we could still achieve competitive results for the chosen dataset.
+Another challenge we encountered was the preprocessing and cleaning of the knowledge graph data. The raw dataset was highly unstructured, containing numerous irrelevant or noisy nodes and edges, such as file paths, images, and metadata entries. While our filtering process removed a significant amount of unnecessary information, there remains a possibility that some useful details were also discarded. A more refined cleaning pipeline, possibly incorporating additional heuristics or machine learning techniques, could help preserve essential information while still improving data quality for the alignment task.
+
+\newpage
+
+Looking ahead, there are several promising directions for future work. One clear avenue for improvement would be to experiment with larger and more powerful sentence embedding models. While the BGE-large-en-v1.5 model performed well, newer or domain-specific embedding techniques might yield better representations for the knowledge graph entities. Similarly, employing more advanced LLMs, such as GPT-4-turbo or specialized entity matching models, could further improve the refinement process, leading to even higher precision in entity alignment.
+
+However, it is important to acknowledge that our project was constrained by computational and financial resources. Running large-scale LLM queries, especially on extensive knowledge graphs, can be costly and time-intensive. Therefore, an interesting future research direction would be to explore cost-efficient strategies, such as distilling large models into smaller, fine-tuned ones or leveraging open-source alternatives.
+
+Despite these limitations, our approach demonstrated competitive results on the chosen dataset, highlighting the potential of hybrid methodologies that integrate structural embeddings with LLM-based semantic analysis. By refining and extending our work, we hope to contribute further to the field of entity alignment and knowledge graph integration, making these techniques more accessible and practical for real-world applications.
 
 \vspace{1.5cm}
 
 ## Conclusion
 
-In conclusion, [TODO]
+In this project, we introduced a two-stage entity alignment framework that leverages graph embeddings for candidate generation and large language models (LLMs) for refined pairing. Our results demonstrate that relying solely on cosine similarity for entity matching may overlook optimal alignments, whereas incorporating LLMs enhances precision by effectively selecting the correct match from a set of top candidates. The evaluation showed significant improvements in F1-score when integrating LLMs into the alignment process, confirming that structural and semantic information are complementary for this task. While our approach is not without limitations, such as the need for further prompt optimization and potential data cleaning improvements, it presents a promising direction for scalable and efficient entity alignment. Ultimately, our framework lays the foundation for more robust and adaptable entity alignment techniques in knowledge graph research.
 
 \vspace{1.5cm}
 
