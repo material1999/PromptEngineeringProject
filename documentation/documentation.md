@@ -125,22 +125,40 @@ Comment: His pilot was Colleen Norris.
 Then we take these dogtags for each node (concatenate all 5 fields into a single string), and calculate embeddings for them. For this task, we use BGE, specifically bge-large-en-v1.5. With this tool, we calculate embedding vectors of 1024 dimensions. The model can be found at Hugging Face here:
 [LINK](https://huggingface.co/BAAI/bge-large-en-v1.5/tree/main)
 
-Now that we have embedding vectors for every node, we take a graph pair A-B. We take a certain node from graph A and we calculate its cosine similarity to every node in graph B. Our baseline solution is to take the most similar node from graph B, we often refer to it as top-1.
+Now that we have embedding vectors for every node, we take a graph pair A-B. We take a certain node from graph A and we calculate its cosine similarity to every node in graph B. Our baseline solution is to take the most similar node from graph B (the top-1 solution).
 
 ### AI Model Integration
 
-During experimetning, we noticed that if we take the top-10 most similar nodes to a selected node, a lot more gold pairs appear. In other words, if we had a method that can effectively select 1 node from the 10 given options, we could achive better results.
+During experimetning, we noticed that if we take the top-10 most similar nodes to a selected node, a lot more gold pairs appear. Figure 2 shows this experiment for two graph pairs. On the X axis, -1 means that the desired gold pair is not in the top-20, 0 means the gold pair is in the top-1, ..., 19 means the gold pair is in the top-20.
 
 \vspace{0.25cm}
 ![top20_coverage.png](../visualizations/top20_coverage_small.png)
 *Fig. 2   How many gold pairs are in the top-1 to top-20 most similar nodes?*
 \vspace{0.25cm}
 
-Figure 2 shows this experiment for two graph pairs. On the X axis, -1 means that the desired gold pair is not in the top-20, 0 means the gold pair is in the top-1, ..., 19 means the gold pair is in the top-20.
+In other words, if we had a method that can effectively select 1 node from the 10 given options, we could achive better results. Our idea was to integrate AI to this step. We wanted to use an LLM, provide possible solutions and let the LLM choose the node which it thinks is the actual pair. For this purpose, we used OpenAI's 'gpt-4o-mini' model.
 
 ### Prompt Engineering
 
-- Techniques employed for effective prompt creation and refinement.
+We call the OpenAI API with the following prompt:
+
+\vspace{0.25cm}
+```
+Task: You will be given a description of an anchor entity and a list of
+candidate entities, all formatted with XML tags. Your task is to:
+- Identify the candidate entity that matches the anchor entity.
+- Return the ID number of the matching candidate entity.
+- If none of the candidates match the anchor entity, return -1.
+###
+Anchor: {anchor}
+###
+{candidate_str}
+###
+Answer:
+```
+\vspace{0.25cm}
+
+The 'anchor' is the entity we want to pair, and the candidates are the top-10 most similar nodes from the other graphs. The anchor and the answer together forms a pair.
 
 \vspace{1.5cm}
 
