@@ -1,1 +1,1 @@
-pandoc documentation.md -o documentation.pdf --pdf-engine=xelatex --variable geometry:margin=1in
+pandoc documentation.md -o documentation.pdf --pdf-engine=xelatex --variable geometry:margin=1in -V fontsize=12pt
